@@ -7,10 +7,10 @@ var tiles = L.tileLayer(
 ).addTo(map);
 
 //en el clusters almaceno todos los markers
-var markers = L.markerClusterGroup();
+let markers = L.markerClusterGroup();
 let data_markers = [];
 let foodsArr = [];
-let filter;
+let filter = "All";
 
 function onMapLoad() {
   console.log("Mapa cargado");
@@ -21,7 +21,7 @@ function onMapLoad() {
     let foodNames;
     let uniqueFoods = [];
     for (i = 0; i < data_markers.length; i++) {
-      var marker = L.marker([data_markers[i].lat, data_markers[i].lng]);
+      marker = L.marker([data_markers[i].lat, data_markers[i].lng]);
     }
     markers.addLayer(marker);
 
@@ -50,26 +50,30 @@ function onMapLoad() {
 
     $("#kind_food_selector").on("change", function () {
       console.log(this.value);
+      filter = this.value;
       render_to_map(data_markers, this.value);
     });
 
     function render_to_map(data_markers, filter) {
       markers.clearLayers();
 
-      for (let i = 0; i < data_markers.length; i++) {
-        if (data_markers[i].kind_food.includes(filter)) {
-          let marker = L.marker(
-            new L.LatLng(data_markers[i].lat, data_markers[i].lng)
-          )
-            .bindPopup(
-              data_markers[i].name +
-                "<br> Kind of food: <br>" +
-                data_markers[i].kind_food
-            )
-            .openPopup();
-          markers.addLayer(marker).addTo(map).openPopup();
+      if (filter == "All") {
+        for (let i = 0; i < data_markers.length; i++) {
+          displayMarkers(data_markers[i]);
+        }
+      } else {
+        for (let i = 0; i < data_markers.length; i++) {
+          if (data_markers[i].kind_food.includes(filter)) {
+            displayMarkers(data_markers[i]);
+          }
         }
       }
     }
   });
+}
+function displayMarkers(data) {
+  marker = new L.Marker(new L.LatLng(data.lat, data.lng))
+    .bindPopup(data.name + "<br> Kind of food: <br>" + data.kind_food)
+    .openPopup();
+  markers.addLayer(marker).addTo(map).openPopup();
 }
