@@ -55,33 +55,19 @@ function onMapLoad() {
 
     function render_to_map(data_markers, filter) {
       markers.clearLayers();
-      if (filter == "All") {
-        for (let i = 0; i < data_markers.length; i++) {
+
+      for (let i = 0; i < data_markers.length; i++) {
+        if (data_markers[i].kind_food.includes(filter)) {
           let marker = L.marker(
             new L.LatLng(data_markers[i].lat, data_markers[i].lng)
           )
             .bindPopup(
               data_markers[i].name +
-                "<br> Kind of food:<br> " +
+                "<br> Kind of food: <br>" +
                 data_markers[i].kind_food
             )
             .openPopup();
           markers.addLayer(marker).addTo(map).openPopup();
-        }
-      } else {
-        for (let i = 0; i < data_markers.length; i++) {
-          if (data_markers[i].kind_food.includes(filter)) {
-            let marker = L.marker(
-              new L.LatLng(data_markers[i].lat, data_markers[i].lng)
-            )
-              .bindPopup(
-                data_markers[i].name +
-                  "<br> Kind of food: <br>" +
-                  data_markers[i].kind_food
-              )
-              .openPopup();
-            markers.addLayer(marker).addTo(map).openPopup();
-          }
         }
       }
     }
